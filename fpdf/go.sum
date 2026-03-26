@@ -11,7 +11,7 @@ github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/ruudk/golang-pdf417 v0.0.0-20181029194003-1af4ab5afa58/go.mod h1:6lfFZQK844Gfx8o5WFuvpxWRwnSoipWe/p622j1v06w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
-github.com/x64c/gw v0.0.0-20260326162841-244bc062e0e2 h1:HSlWFOeLexCS80J5Ob7J4vy8BvH2WEp+xlPrgoBsYHY=
-github.com/x64c/gw v0.0.0-20260326162841-244bc062e0e2/go.mod h1:id2Nbm6H/MQE7Ek2kmVVk2qa/iS2KCspbZnR5Z51c6E=
+github.com/x64c/gw v0.0.0-20260326204602-2bd1b566ac6b h1:Yti7QfWijPLvvveIEpB6/yn5s9lvKGqa1gbmv362RJI=
+github.com/x64c/gw v0.0.0-20260326204602-2bd1b566ac6b/go.mod h1:id2Nbm6H/MQE7Ek2kmVVk2qa/iS2KCspbZnR5Z51c6E=
 golang.org/x/image v0.0.0-20190910094157-69e4b8554b2a/go.mod h1:FeLwcggjj3mMvU+oOTbSwawSJRM1uh48EjtB4UJZlP0=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
