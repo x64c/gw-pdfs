@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/phpdave11/gofpdf"
 	"github.com/phpdave11/gofpdf/contrib/gofpdi"
@@ -20,16 +21,39 @@ type Writer struct {
 
 	paperSize   pdfs.PaperSize
 	orientation string
+	unit        pdfs.LengthUnit
 
 	impl      *gofpdf.Fpdf
 	templates *pdfs.TemplateStore[int]
 }
 
-func NewWriter(paperSize pdfs.PaperSize, orientation string) *Writer {
+var knownSizes = map[string]bool{
+	"a4": true, "letter": true, "legal": true,
+}
+
+// NewWriter creates a new PDF writer. For known paper sizes (Letter, A4, Legal),
+// the library's built-in dimensions are used. For custom sizes, dimensions are
+// converted from PaperSize to the given unit.
+func NewWriter(paperSize pdfs.PaperSize, orientation string, unit pdfs.LengthUnit) *Writer {
+	var impl *gofpdf.Fpdf
+	if knownSizes[strings.ToLower(paperSize.Name)] {
+		impl = gofpdf.New(orientation, unit.Name, paperSize.Name, "")
+	} else {
+		w := paperSize.Width
+		h := paperSize.Height
+		w.SetUnit(unit)
+		h.SetUnit(unit)
+		impl = gofpdf.NewCustom(&gofpdf.InitType{
+			OrientationStr: orientation,
+			UnitStr:        unit.Name,
+			Size:           gofpdf.SizeType{Wd: w.Value, Ht: h.Value},
+		})
+	}
 	return &Writer{
-		orientation: orientation,
 		paperSize:   paperSize,
-		impl:        gofpdf.New(orientation, "pt", paperSize.Name, ""),
+		orientation: orientation,
+		unit:        unit,
+		impl:        impl,
 		templates:   pdfs.NewTemplateStore[int](),
 	}
 }
@@ -40,6 +64,10 @@ func (w *Writer) PaperSize() pdfs.PaperSize {
 
 func (w *Writer) Orientation() string {
 	return w.orientation
+}
+
+func (w *Writer) Unit() pdfs.LengthUnit {
+	return w.unit
 }
 
 func (w *Writer) TemplateStore() *pdfs.TemplateStore[int] {
@@ -63,7 +91,11 @@ func (w *Writer) AddTemplatePage(storeKey string) bool {
 		return false
 	}
 	w.impl.AddPage()
-	gofpdi.UseImportedTemplate(w.impl, template, 0, 0, w.paperSize.Width, w.paperSize.Height)
+	pw := w.paperSize.Width
+	ph := w.paperSize.Height
+	pw.SetUnit(w.unit)
+	ph.SetUnit(w.unit)
+	gofpdi.UseImportedTemplate(w.impl, template, 0, 0, pw.Value, ph.Value)
 	return true
 }
 
@@ -71,8 +103,28 @@ func (w *Writer) SetFont(family string, style string, size float64) {
 	w.impl.SetFont(family, style, size)
 }
 
-func (w *Writer) Text(x float64, y float64, text string) {
+func (w *Writer) SetTextColor(r, g, b int) {
+	w.impl.SetTextColor(r, g, b)
+}
+
+func (w *Writer) Text(x, y float64, text string) {
 	w.impl.Text(x, y, text)
+}
+
+func (w *Writer) SetDrawColor(r, g, b int) {
+	w.impl.SetDrawColor(r, g, b)
+}
+
+func (w *Writer) SetLineWidth(width float64) {
+	w.impl.SetLineWidth(width)
+}
+
+func (w *Writer) Line(x1, y1, x2, y2 float64) {
+	w.impl.Line(x1, y1, x2, y2)
+}
+
+func (w *Writer) Rect(x, y, wd, h float64, style string) {
+	w.impl.Rect(x, y, wd, h, style)
 }
 
 func (w *Writer) WriteTo(writer io.Writer) (int64, error) {
