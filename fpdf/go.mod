@@ -4,7 +4,7 @@ go 1.26.2
 
 require (
 	github.com/phpdave11/gofpdf v1.4.3
-	github.com/x64c/gw v0.1.17
+	github.com/x64c/gw v0.1.18
 )
 
 require (
