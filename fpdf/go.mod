@@ -1,10 +1,10 @@
 module github.com/x64c/gw-pdfs/fpdf
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/phpdave11/gofpdf v1.4.3
-	github.com/x64c/gw v0.1.30
+	github.com/x64c/gw v0.1.31
 )
 
 require (
